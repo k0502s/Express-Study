@@ -1,12 +1,8 @@
 var db = require('../lib/db');
+var bcrypt = require('bcrypt');
 
 module.exports = function (app) {
 
-    var authData = {
-  email: 'k0502s@naver.com',
-  password: '061599',
-  nickname: 'jin seok'
-      };
 
     var passport = require('passport'),
         LocalStrategy = require('passport-local').Strategy;
@@ -27,23 +23,31 @@ module.exports = function (app) {
             usernameField: 'email',
             passwordField: 'pwd'
         },
-        function (username, password, done) {
-            if (username === authData.email) {
-                if (password === authData.password) {
-                    return done(null, authData, {
-                        message: 'Welcome.'
+        function (email, password, done) {
+        var user = db.get('users').find({
+            email:email
+            
+        }).value();
+           if(user){
+                    bcrypt.compare(password, user.password, function(err,result){
+                    if(result){
+                        return done(null, user, {
+                            message: 'Welcome.'
+                        });
+                    } else {
+                        return done(null, false, {
+                            message: 'Password is not correct.'
+                        });
+                    }
                     });
-                } else {
+               }
+                 else {
                     return done(null, false, {
-                        message: 'Incorrect password.'
+                        message: 'There is no email.'
                     });
                 }
-            } else {
-                return done(null, false, {
-                    message: 'Incorrect username.'
-                });
+            
             }
-        }
     ));
     return passport;
 }

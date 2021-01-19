@@ -6,6 +6,7 @@ var sanitizeHtml = require('sanitize-html');
 var template = require('../lib/template.js');
 var shortid = require('shortid');
 var db = require('../lib/db');
+var bcrypt = require('bcrypt');
 
 
 module.exports = function (passport) {
@@ -71,17 +72,19 @@ router.post('/register_process', function (request, response) {
       request.flash('error', 'Password must same!');
       response.redirect('/auth/register');
     } else {
-      var user = {
-        id:shortid.generate(),
-        email:email,
-        password:pwd,
-        displayName:displayName
-      };
-         db.get('users').push(user).write();
-      request.login(user, function(err){
-        console.log('redirect');
-        return response.redirect('/');
-      })
+       bcrypt.hash(pwd, 10, function (err, hash) {
+        var user = {
+          id: shortid.generate(),
+          email: email,
+          password: hash,
+          displayName: displayName
+        };
+        db.get('users').push(user).write();
+        request.login(user, function (err) {
+          console.log('redirect');
+          return response.redirect('/');
+        })
+      });
       
     }
   });    
