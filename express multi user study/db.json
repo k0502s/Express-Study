@@ -1,0 +1,21 @@
+{
+  "users": [
+    {
+      "email": "k0502s@naver.com",
+      "password": "061599",
+      "displayName": "jin seok"
+    },
+    {
+      "id": "pfDcBWI1d",
+      "email": "k0502s@naver.com",
+      "password": "123",
+      "displayName": "jin seok"
+    },
+    {
+      "id": "fFH53rdFS",
+      "email": "k0502s@naver.com",
+      "password": "1234",
+      "displayName": "jin seok"
+    }
+  ]
+}
